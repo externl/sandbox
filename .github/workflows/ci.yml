@@ -34,4 +34,4 @@ jobs:
       - name: Build Ice
         run: |
           cd ice/cpp
-          make -j-j$(nproc) V=1 srcs
+          make -j3 V=1 srcs
