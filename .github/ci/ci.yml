@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  ci:
+    name: test ccache on ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          # create-symlink: true
+          key: ${{ runner.os }}-build-hello-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-build-hello-
+            ${{ runner.os }}-build-
+
+      - name: Build
+        run: make
+
+      - name: Test
+        run: ./hello
