@@ -42,4 +42,4 @@ jobs:
       - name: Build Ice
         run: |
           cd ice/cpp
-          make -j3 V=1 slice2cpp
+          make -j3 V=1 Ice
