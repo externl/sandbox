@@ -29,7 +29,7 @@ jobs:
         shell: bash
 
       - name: Clone Ice
-        run: git checkout https://github.com/zeroc-ice/ice.git ice
+        run: git clone https://github.com/zeroc-ice/ice
 
       - name: Build Ice
         run: |
