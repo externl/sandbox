@@ -16,7 +16,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y \
             libbz2-dev libssl-dev libffi-dev \
-            libmcpp-dev libedit-dev liblmdb-dev libexpat1-dev
+            libmcpp-dev libedit-dev liblmdb-dev libexpat1-dev \
             libbluetooth-dev libdbus-1-dev \
             libsystemd-dev
 
