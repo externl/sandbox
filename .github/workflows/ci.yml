@@ -13,5 +13,5 @@ jobs:
         uses: matlab-actions/setup-matlab@v2
 
       - name: List contents
-        working-directory: /usr/local/MATLAB
+        working-directory: /usr/local/
         run: find .
