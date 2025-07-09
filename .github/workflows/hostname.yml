@@ -26,8 +26,11 @@ jobs:
         run: |
           echo "Hostname: $(hostname)"
           echo "Fully Qualified Domain Name: $(hostname -f)"
+          echo "Pinging localhost..."
           ping -c 1 localhost
+          echo "Pinging hostname..."
           ping -c 1 $(hostname)
+          echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
         if: runner.os == 'macOS'
 
@@ -35,16 +38,23 @@ jobs:
         run: |
           echo "Hostname: $(hostname)"
           echo "Fully Qualified Domain Name: $(hostname -f)"
+          echo "Pinging localhost..."
           ping -c 1 localhost
+          echo "Pinging hostname..."
           ping -c 1 $(hostname)
+          echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
         if: runner.os == 'Linux'
 
       - name: Run hostname check script
         run: |
-          echo "Hostname: $(hostname)"
-          echo "Fully Qualified Domain Name: $(hostname -f)"
+          echo "Hostname: $env:COMPUTERNAME"
+          echo "Fully Qualified Domain Name: $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)"
+          echo "Pinging localhost..."
           ping -n 1 localhost
-          ping -n 1 $(hostname)
-          ping -n 1 $(hostname -f)
+          echo "Pinging hostname..."
+          ping -n 1 $env:COMPUTERNAME
+          echo "Pinging FQDN..."
+          ping -n 1 $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)
+        shell: pwsh
         if: runner.os == 'Windows'
