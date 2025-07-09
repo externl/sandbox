@@ -6,16 +6,6 @@ import subprocess
 import sys
 
 
-def get_hostname():
-    """Get the system's hostname."""
-    return socket.gethostname()
-
-
-def get_fqdn():
-    """Get the system's fully qualified domain name."""
-    return socket.getfqdn()
-
-
 def get_ips_for_hostname(hostname):
     """Get all IP addresses associated with the hostname."""
     try:
@@ -55,20 +45,9 @@ def ping_target(target):
         return False
 
 
-# Maintain backwards compatibility with original function names
-def ping_hostname(hostname):
-    """Ping a hostname directly and return whether it was successful."""
-    return ping_target(hostname)
-
-
-def ping_ip(ip):
-    """Ping an IP address and return whether it was successful."""
-    return ping_target(ip)
-
-
 def run_checks_for_target(target_name, target_value):
     """Run all checks for a given target (hostname or FQDN).
-    
+
     Returns:
         bool: True if all checks passed, False if any failed
     """
@@ -97,29 +76,29 @@ def run_checks_for_target(target_name, target_value):
     # Ping each IP
     print(f"\nPinging IP addresses for {target_value}:")
     for ip in ips:
-        success = ping_ip(ip)
+        success = ping_target(ip)
         status = "successful" if success else "failed"
         print(f"  Ping to {ip}: {status}")
         if not success:
             has_failures = True
-    
+
     return not has_failures
 
 
 def main():
     # Get hostname and FQDN
-    hostname = get_hostname()
-    fqdn = get_fqdn()
-    
+    hostname = socket.gethostname()
+    fqdn = socket.getfqdn()
+
     all_passed = True
 
     # Run checks for hostname
     hostname_passed = run_checks_for_target("Hostname", hostname)
     if not hostname_passed:
         all_passed = False
-    
-    print("\n" + "="*50 + "\n")
-    
+
+    print("\n" + "=" * 50 + "\n")
+
     # Run checks for FQDN (only if different from hostname)
     if fqdn != hostname:
         fqdn_passed = run_checks_for_target("FQDN", fqdn)
@@ -127,7 +106,7 @@ def main():
             all_passed = False
     else:
         print(f"FQDN is the same as hostname: {fqdn}")
-    
+
     # Exit with appropriate status code
     if not all_passed:
         print("\nSome checks failed. Exiting with status code 1.")
