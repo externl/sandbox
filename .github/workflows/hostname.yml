@@ -11,6 +11,7 @@ jobs:
   check-hostname:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-15, windows-2022]
 
@@ -54,12 +55,12 @@ jobs:
       - name: Run hostname check script
         run: |
           echo "Hostname: $env:COMPUTERNAME"
-          echo "Fully Qualified Domain Name: $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)"
+          echo "Fully Qualified Domain Name: $([System.Net.Dns]::GetHostByName("").HostName)"
           echo "Pinging localhost..."
           ping -n 1 localhost
           echo "Pinging hostname..."
           ping -n 1 $env:COMPUTERNAME
           echo "Pinging FQDN..."
-          ping -n 1 $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)
+          ping -n 1 $([System.Net.Dns]::GetHostByName("").HostName)
         shell: pwsh
         if: runner.os == 'Windows' && always()
