@@ -64,3 +64,17 @@ jobs:
           ping -n 1 $([System.Net.Dns]::GetHostByName('').HostName)
         shell: pwsh
         if: runner.os == 'Windows' && always()
+
+      - name: Run hostname check script
+        run: |
+          set -x
+          echo "Hostname: $(hostname)"
+          echo "Fully Qualified Domain Name: $(hostname -f)"
+          echo "Pinging localhost..."
+          ping -n 1 localhost
+          echo "Pinging hostname..."
+          ping -n 1 $(hostname)
+          echo "Pinging FQDN..."
+          ping -n 1 $(hostname -f)
+        shell: bash
+        if: runner.os == 'Windows' && always()
