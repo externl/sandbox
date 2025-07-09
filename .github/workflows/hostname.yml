@@ -53,7 +53,6 @@ jobs:
 
       - name: Run hostname check script
         run: |
-          set -x
           echo "Hostname: $env:COMPUTERNAME"
           echo "Fully Qualified Domain Name: $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)"
           echo "Pinging localhost..."
