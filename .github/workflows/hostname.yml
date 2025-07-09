@@ -35,7 +35,7 @@ jobs:
           ping -c 1 $(hostname)
           echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
-        if: runner.os == 'macOS'
+        if: runner.os == 'macOS' && always()
 
       - name: Run hostname check script
         run: |
@@ -47,7 +47,7 @@ jobs:
           ping -c 1 $(hostname)
           echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
-        if: runner.os == 'Linux'
+        if: runner.os == 'macOS' && always()
 
       - name: Run hostname check script
         run: |
@@ -60,4 +60,4 @@ jobs:
           echo "Pinging FQDN..."
           ping -n 1 $([System.Net.Dns]::GetHostByName($env:COMPUTERNAME).HostName)
         shell: pwsh
-        if: runner.os == 'Windows'
+        if: runner.os == 'macOS' && always()

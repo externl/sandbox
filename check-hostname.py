@@ -3,6 +3,7 @@
 import socket
 import platform
 import subprocess
+import sys
 
 
 def get_hostname():
@@ -66,13 +67,20 @@ def ping_ip(ip):
 
 
 def run_checks_for_target(target_name, target_value):
-    """Run all checks for a given target (hostname or FQDN)."""
+    """Run all checks for a given target (hostname or FQDN).
+    
+    Returns:
+        bool: True if all checks passed, False if any failed
+    """
     print(f"{target_name}: {target_value}")
+    has_failures = False
 
     # Ping the target directly
     ping_success = ping_target(target_value)
     ping_status = "successful" if ping_success else "failed"
     print(f"Ping to {target_name.lower()} {target_value}: {ping_status}")
+    if not ping_success:
+        has_failures = True
 
     print()
     # Get IPs for the target
@@ -80,7 +88,7 @@ def run_checks_for_target(target_name, target_value):
 
     if not ips:
         print(f"No IP addresses found for {target_value}")
-        return
+        return False
 
     print(f"IP addresses for {target_value}:")
     for ip in ips:
@@ -92,23 +100,41 @@ def run_checks_for_target(target_name, target_value):
         success = ping_ip(ip)
         status = "successful" if success else "failed"
         print(f"  Ping to {ip}: {status}")
+        if not success:
+            has_failures = True
+    
+    return not has_failures
 
 
 def main():
     # Get hostname and FQDN
     hostname = get_hostname()
     fqdn = get_fqdn()
+    
+    all_passed = True
 
     # Run checks for hostname
-    run_checks_for_target("Hostname", hostname)
+    hostname_passed = run_checks_for_target("Hostname", hostname)
+    if not hostname_passed:
+        all_passed = False
     
     print("\n" + "="*50 + "\n")
     
     # Run checks for FQDN (only if different from hostname)
     if fqdn != hostname:
-        run_checks_for_target("FQDN", fqdn)
+        fqdn_passed = run_checks_for_target("FQDN", fqdn)
+        if not fqdn_passed:
+            all_passed = False
     else:
         print(f"FQDN is the same as hostname: {fqdn}")
+    
+    # Exit with appropriate status code
+    if not all_passed:
+        print("\nSome checks failed. Exiting with status code 1.")
+        sys.exit(1)
+    else:
+        print("\nAll checks passed.")
+        sys.exit(0)
 
 
 if __name__ == "__main__":
