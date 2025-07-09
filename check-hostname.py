@@ -3,12 +3,16 @@
 import socket
 import platform
 import subprocess
-import sys
 
 
 def get_hostname():
     """Get the system's hostname."""
     return socket.gethostname()
+
+
+def get_fqdn():
+    """Get the system's fully qualified domain name."""
+    return socket.getfqdn()
 
 
 def get_ips_for_hostname(hostname):
@@ -61,34 +65,50 @@ def ping_ip(ip):
     return ping_target(ip)
 
 
-def main():
-    # Get hostname
-    hostname = get_hostname()
-    print(f"Hostname: {hostname}")
+def run_checks_for_target(target_name, target_value):
+    """Run all checks for a given target (hostname or FQDN)."""
+    print(f"{target_name}: {target_value}")
 
-    # Ping hostname
-    hostname_ping_success = ping_hostname(hostname)
-    hostname_ping_status = "successful" if hostname_ping_success else "failed"
-    print(f"Ping to hostname {hostname}: {hostname_ping_status}")
+    # Ping the target directly
+    ping_success = ping_target(target_value)
+    ping_status = "successful" if ping_success else "failed"
+    print(f"Ping to {target_name.lower()} {target_value}: {ping_status}")
 
     print()
-    # Get IPs for hostname
-    ips = get_ips_for_hostname(hostname)
+    # Get IPs for the target
+    ips = get_ips_for_hostname(target_value)
 
     if not ips:
-        print(f"No IP addresses found for {hostname}")
+        print(f"No IP addresses found for {target_value}")
         return
 
-    print(f"IP addresses for {hostname}:")
+    print(f"IP addresses for {target_value}:")
     for ip in ips:
         print(f"  {ip}")
 
     # Ping each IP
-    print("\nPinging IP addresses:")
+    print(f"\nPinging IP addresses for {target_value}:")
     for ip in ips:
         success = ping_ip(ip)
         status = "successful" if success else "failed"
         print(f"  Ping to {ip}: {status}")
+
+
+def main():
+    # Get hostname and FQDN
+    hostname = get_hostname()
+    fqdn = get_fqdn()
+
+    # Run checks for hostname
+    run_checks_for_target("Hostname", hostname)
+    
+    print("\n" + "="*50 + "\n")
+    
+    # Run checks for FQDN (only if different from hostname)
+    if fqdn != hostname:
+        run_checks_for_target("FQDN", fqdn)
+    else:
+        print(f"FQDN is the same as hostname: {fqdn}")
 
 
 if __name__ == "__main__":
