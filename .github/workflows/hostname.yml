@@ -24,6 +24,8 @@ jobs:
 
       - name: Run hostname check script
         run: |
+          echo "Hostname: $(hostname)"
+          echo "Fully Qualified Domain Name: $(hostname -f)"
           ping -c 1 localhost
           ping -c 1 $(hostname)
           ping -c 1 $(hostname -f)
@@ -31,6 +33,8 @@ jobs:
 
       - name: Run hostname check script
         run: |
+          echo "Hostname: $(hostname)"
+          echo "Fully Qualified Domain Name: $(hostname -f)"
           ping -c 1 localhost
           ping -c 1 $(hostname)
           ping -c 1 $(hostname -f)
@@ -38,6 +42,8 @@ jobs:
 
       - name: Run hostname check script
         run: |
+          echo "Hostname: $(hostname)"
+          echo "Fully Qualified Domain Name: $(hostname -f)"
           ping -n 1 localhost
           ping -n 1 $(hostname)
           ping -n 1 $(hostname -f)
