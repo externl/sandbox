@@ -17,10 +17,28 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.x"
+      # - name: Set up Python
+      #   uses: actions/setup-python@v4
+      #   with:
+      #     python-version: "3.x"
 
       - name: Run hostname check script
-        run: python check-hostname.py
+        run: |
+          ping -c 1 localhost
+          ping -c 1 $(hostname)
+          ping -c 1 $(hostname -f)
+        if: runner.os == 'macOS'
+
+      - name: Run hostname check script
+        run: |
+          ping -c 1 localhost
+          ping -c 1 $(hostname)
+          ping -c 1 $(hostname -f)
+        if: runner.os == 'Linux'
+
+      - name: Run hostname check script
+        run: |
+          ping -n 1 localhost
+          ping -n 1 $(hostname)
+          ping -n 1 $(hostname -f)
+        if: runner.os == 'Windows'
