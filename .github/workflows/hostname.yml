@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15, windows-2022]
+        os: [ubuntu-24.04, macos-15]
 
     steps:
       - uses: actions/checkout@v3
@@ -23,58 +23,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Run check-hostname.py
-        run: python check-hostname.py
-
-      # - name: Run hostname check script
-      #   run: |
-      #     set -x
-      #     echo "Hostname: $(hostname)"
-      #     echo "Fully Qualified Domain Name: $(hostname -f)"
-      #     echo "Pinging localhost..."
-      #     ping -c 1 localhost
-      #     echo "Pinging hostname..."
-      #     ping -c 1 $(hostname)
-      #     echo "Pinging FQDN..."
-      #     ping -c 1 $(hostname -f)
-      #   if: runner.os == 'macOS' && always()
-
-      # - name: Run hostname check script
-      #   run: |
-      #     set -x
-      #     echo "Hostname: $(hostname)"
-      #     echo "Fully Qualified Domain Name: $(hostname -f)"
-      #     echo "Pinging localhost..."
-      #     ping -c 1 localhost
-      #     echo "Pinging hostname..."
-      #     ping -c 1 $(hostname)
-      #     echo "Pinging FQDN..."
-      #     ping -c 1 $(hostname -f)
-      #   if: runner.os == 'Linux' && always()
-
-      # - name: Run hostname check script
-      #   run: |
-      #     echo "Hostname: $env:COMPUTERNAME"
-      #     echo "Fully Qualified Domain Name: $([System.Net.Dns]::GetHostEntry([System.Net.Dns]::GetHostName()).HostName)"
-      #     echo "Pinging localhost..."
-      #     ping -n 1 localhost
-      #     echo "Pinging hostname..."
-      #     ping -n 1 $env:COMPUTERNAME
-      #     echo "Pinging FQDN..."
-      #     ping -n 1 [System.Net.Dns]::GetHostEntry([System.Net.Dns]::GetHostName()).HostName
-      #   shell: pwsh
-      #   if: runner.os == 'Windows' && always()
-
-      # - name: Run hostname check script
-      #   run: |
-      #     set -x
-      #     echo "Hostname: $(hostname)"
-      #     echo "Fully Qualified Domain Name: $(hostname -f)"
-      #     echo "Pinging localhost..."
-      #     ping -n 1 localhost
-      #     echo "Pinging hostname..."
-      #     ping -n 1 $(hostname)
-      #     echo "Pinging FQDN..."
-      #     ping -n 1 $(hostname -f)
-      #   shell: bash
-      #   if: runner.os == 'Windows' && always()
+      - name: Run hostname check script
+        run: |
+          set -x
+          echo "Hostname: $(hostname)"
+          echo "Fully Qualified Domain Name: $(hostname -f)"
+          echo "Pinging localhost..."
+          ping -c 1 localhost
+          echo "Pinging hostname..."
+          ping -c 1 $(hostname)
+          echo "Pinging FQDN..."
+          ping -c 1 $(hostname -f)
