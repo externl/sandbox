@@ -21,6 +21,13 @@ jobs:
       - name: Dump /etc/hosts
         run: cat /etc/hosts
 
+      - name: Checks
+        run: |
+          set -x
+          scutil —-get ComputerName # the ”friendly” name
+          scutil —-get LocalHostName # the Bonjour / mDNS / ZeroConf host name
+          scutil —-get HostName # should be the same as what hostname command returns
+
       - name: Run hostname check script
         run: |
           set -x
