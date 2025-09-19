@@ -21,7 +21,7 @@ jobs:
       - name: Dump /etc/hosts
         run: cat /etc/hosts
 
-      - name: Checks
+      - name: scutil
         run: |
           set -x
           scutil —-get ComputerName # the ”friendly” name
@@ -39,3 +39,12 @@ jobs:
           ping -c 1 $(hostname)
           echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
+
+      - name: Change hostname
+        run: |
+          # https://apple.stackexchange.com/questions/287760/set-the-hostname-computer-name-for-macos
+
+          sudo scutil --set HostName <new host name>
+          sudo scutil --set LocalHostName <new host name>
+          sudo scutil --set ComputerName <new name>
+          dscacheutil -flushcache
