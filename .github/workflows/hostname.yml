@@ -21,6 +21,39 @@ jobs:
       - name: Dump /etc/hosts
         run: cat /etc/hosts
 
+      - name: Check FQDN is in /etc/hosts
+        run: |
+          set -x
+          FQDN=$(hostname -f)
+          if ! grep -q "$FQDN" /etc/hosts; then
+            echo "FQDN $FQDN not found in /etc/hosts"
+
+            # Find the entry in /etc/hosts that corresponds to what the hostname should be.
+            # It's the one that ends in ".local" and is not "localhost" or "broadcasthost".
+            ENTRY=$(grep '\.local' /etc/hosts | grep -v 'localhost' | grep -v 'broadcasthost' | grep -v '^#')
+            if [ -n "$ENTRY" ]; then
+              echo "Found entry in /etc/hosts that might correspond to the hostname:"
+              HOSTNAME=$(echo "$ENTRY" | awk '{print $2}')
+              echo "Setting hostname from /etc/hosts: $HOSTNAME"
+
+
+              # Example from a runner that doesn't need fixing:
+              # > scutil --get ComputerName
+              # iad20-fj925-81b5ba22-7890-42f2-92e2-f0dbf5ebb8ed-1E029398D518
+              # > scutil --get LocalHostName
+              # iad20-fj925-81b5ba22-7890-42f2-92e2-f0dbf5ebb8ed-1E029398D518
+              # > scutil --get HostName
+              # iad20-fj925-81b5ba22-7890-42f2-92e2-f0dbf5ebb8ed-1E029398D518.local
+
+              sudo scutil --set HostName "${HOSTNAME%%.*}" # strip domain part for HostName
+              sudo scutil --set LocalHostName "${HOSTNAME%%.*}" # strip domain part for LocalHostName
+              sudo scutil --set ComputerName "$HOSTNAME"
+              dscacheutil -flushcache
+            else
+              echo "No suitable entry found in /etc/hosts."
+            fi
+          fi
+
       - name: scutil
         run: |
           set -x
