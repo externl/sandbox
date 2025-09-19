@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15]
+        os: [macos-26]
 
     steps:
       - uses: actions/checkout@v3
@@ -24,9 +24,9 @@ jobs:
       - name: scutil
         run: |
           set -x
-          scutil —-get ComputerName # the ”friendly” name
-          scutil —-get LocalHostName # the Bonjour / mDNS / ZeroConf host name
-          scutil —-get HostName # should be the same as what hostname command returns
+          scutil --get ComputerName # the ”friendly” name
+          scutil --get LocalHostName # the Bonjour / mDNS / ZeroConf host name
+          scutil --get HostName # should be the same as what hostname command returns
 
       - name: Run hostname check script
         run: |
@@ -40,11 +40,11 @@ jobs:
           echo "Pinging FQDN..."
           ping -c 1 $(hostname -f)
 
-      - name: Change hostname
-        run: |
-          # https://apple.stackexchange.com/questions/287760/set-the-hostname-computer-name-for-macos
+      # - name: Change hostname
+      #   run: |
+      #     # https://apple.stackexchange.com/questions/287760/set-the-hostname-computer-name-for-macos
 
-          sudo scutil --set HostName <new host name>
-          sudo scutil --set LocalHostName <new host name>
-          sudo scutil --set ComputerName <new name>
-          dscacheutil -flushcache
+      #     sudo scutil --set HostName <new host name>
+      #     sudo scutil --set LocalHostName <new host name>
+      #     sudo scutil --set ComputerName <new name>
+      #     dscacheutil -flushcache
